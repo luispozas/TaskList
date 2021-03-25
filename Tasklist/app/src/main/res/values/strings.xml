@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Tasklist</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">TaskList</string>
+    <string name="nav_header_subtitle">---------</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Task</string>
+    <string name="delete_task">DELETE</string>
+    <string name="save_task">SAVE</string>
+    <string name="setting">Setting</string>
+</resources>
