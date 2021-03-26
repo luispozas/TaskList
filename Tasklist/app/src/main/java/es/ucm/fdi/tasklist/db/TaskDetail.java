@@ -6,17 +6,19 @@ public class TaskDetail {
     private String title;
     private String desc;
     private String date;
+    private String hora;
     private Boolean fin;
 
     private Boolean imp;
 
-    public TaskDetail(int id, String title, String desc, String date, boolean fin,  boolean imp){
+    public TaskDetail(int id, String title, String desc, String date, boolean fin,  boolean imp, String hora){
         this.id = id;
         this.title = title;
         this.desc = desc;
         this.date = date;
         this.fin = fin;
         this.imp = imp;
+        this.hora = hora;
     }
 
     public int getId() {
@@ -49,6 +51,14 @@ public class TaskDetail {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
     public Boolean getFin() {

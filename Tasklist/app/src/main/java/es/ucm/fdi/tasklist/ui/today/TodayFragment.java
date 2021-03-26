@@ -64,22 +64,21 @@ public class TodayFragment extends Fragment {
             Cursor c = db.rawQuery("SELECT * FROM tasks", null);
             if (c.moveToFirst()) {
                 do {
-                    if(c.getString(3).equals(DataBaseTask.getInstance(getContext()).getDate())){
-                        updateList(true,
-                                c.getInt(0),
-                                (c.isNull(1))? "" : c.getString(1),
-                                (c.isNull(2))? "" : c.getString(2),
-                                (c.isNull(3))? "" : c.getString(3),
-                                c.getInt(4) == 0 ? false : true,
-                                c.getInt(5) == 0 ? false : true);
-                    }
+                    updateList(true,
+                            c.getInt(0),
+                            (c.isNull(1))? "" : c.getString(1),
+                            (c.isNull(2))? "" : c.getString(2),
+                            (c.isNull(3))? "" : c.getString(3),
+                            c.getInt(4) == 0 ? false : true,
+                            c.getInt(5) == 0 ? false : true,
+                            (c.isNull(6))? "" : c.getString(6));
                 } while (c.moveToNext());
             }
         }
     }
 
-    public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp){
-        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp);
+    public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
+        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
         if (on_off) {
             if (todayTaskList.contains(detail)) {
                 todayTaskList.remove(detail);
@@ -101,7 +100,7 @@ public class TodayFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openViewViewNotesActivity(todayTaskList.get(position).getId(), todayTaskList.get(position).getTitle(), todayTaskList.get(position).getDesc(),
-                        todayTaskList.get(position).getDate(), todayTaskList.get(position).getFin(), todayTaskList.get(position).getImp());
+                        todayTaskList.get(position).getDate(), todayTaskList.get(position).getFin(), todayTaskList.get(position).getImp(), todayTaskList.get(position).getHora());
             }
         });
     }
@@ -111,7 +110,7 @@ public class TodayFragment extends Fragment {
         super.onDestroy();
     }
 
-    public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp) {
+    public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp, String hora) {
         Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
         notesActivityIntent.putExtra("CREATED",true);
         notesActivityIntent.putExtra("ID",id);
@@ -120,12 +119,13 @@ public class TodayFragment extends Fragment {
         notesActivityIntent.putExtra("DATE",date);
         notesActivityIntent.putExtra("FINISH",fin);
         notesActivityIntent.putExtra("IMPORTANT",imp);
+        notesActivityIntent.putExtra("HORA",hora);
         this.startActivityForResult(notesActivityIntent, 2);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        String title, content, date;
+        String title, content, date, hora;
         boolean finish;
         boolean important;
         int id;
@@ -134,18 +134,19 @@ public class TodayFragment extends Fragment {
             title = data.getExtras().getString("title");
             content = data.getExtras().getString("content");
             date = data.getExtras().getString("date");
+            hora = data.getExtras().getString("hora");
             finish = data.getExtras().getBoolean("finish");
             important = data.getExtras().getBoolean("important");
 
             if (requestCode == 2) {
                 id = data.getExtras().getInt("id");
                 if (resultCode == Activity.RESULT_OK) {
-                    TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important);
+                    TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(taskDetail, db);
                 }
 
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important);
+                    TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).deleteItem(taskDetail, db);
                 }
             }

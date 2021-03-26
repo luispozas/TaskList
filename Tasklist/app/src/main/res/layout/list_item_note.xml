@@ -45,7 +45,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Task title"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/task_date_list"
                 app:layout_constraintEnd_toStartOf="@+id/task_important_list"
                 app:layout_constraintHorizontal_bias="0.952"

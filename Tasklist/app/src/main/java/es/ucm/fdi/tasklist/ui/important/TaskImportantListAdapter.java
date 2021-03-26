@@ -25,12 +25,15 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
     public View getView(int position, View convertView, ViewGroup parent) {
         String title = getItem(position).getTitle();
         String date = getItem(position).getDate();
+        boolean fin = getItem(position).getFin();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(R.layout.list_item_note,null);
 
         TextView task_title = convertView.findViewById(R.id.task_title_list);
         TextView task_date = convertView.findViewById(R.id.task_date_list);
+
+        if(fin) convertView.setBackgroundColor(Color.rgb(232,232,232));
 
         task_title.setText(title);
         task_date.setText(date);

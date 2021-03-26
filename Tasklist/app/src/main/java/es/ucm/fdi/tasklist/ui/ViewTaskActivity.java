@@ -3,6 +3,7 @@ package es.ucm.fdi.tasklist.ui;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +28,8 @@ public class ViewTaskActivity extends AppCompatActivity {
 
     EditText title;
     EditText description;
-    Button date;
+    EditText date;
+    EditText hora;
     CheckBox finish;
     CheckBox important;
     Button delete;
@@ -44,6 +47,7 @@ public class ViewTaskActivity extends AppCompatActivity {
         title = findViewById(R.id.task_title_edit);
         description = findViewById(R.id.task_description_edit);
         date = findViewById(R.id.task_date_edit);
+        hora = findViewById(R.id.task_hour_edit);
         finish = findViewById(R.id.task_finish_edit);
         important = findViewById(R.id.task_important_edit);
         delete = findViewById(R.id.task_delete_edit);
@@ -54,6 +58,7 @@ public class ViewTaskActivity extends AppCompatActivity {
             String t = getIntent().getExtras().getString("TITLE");
             String c = getIntent().getExtras().getString("CONTENT");
             String d = getIntent().getExtras().getString("DATE");
+            String h = getIntent().getExtras().getString("HORA");
             boolean f = getIntent().getExtras().getBoolean("FINISH");
             boolean i = getIntent().getExtras().getBoolean("IMPORTANT");
 
@@ -62,10 +67,12 @@ public class ViewTaskActivity extends AppCompatActivity {
             date.setText(d);
             finish.setChecked(f);
             important.setChecked(i);
+            hora.setText(h);
 
         }
         else{
             date.setText(DataBaseTask.getInstance(this).getDate());
+            hora.setText(DataBaseTask.getInstance(this).getHourAndMin());
         }
 
         execListener();
@@ -88,6 +95,22 @@ public class ViewTaskActivity extends AppCompatActivity {
             }
         });
 
+        hora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog dialogoHora = new TimePickerDialog(ViewTaskActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        hora.setText(DataBaseTask.getInstance(getApplicationContext()).getFormatHour(hourOfDay, minute));
+                    }
+                },DataBaseTask.getInstance(getApplicationContext()).getHour(),
+                  DataBaseTask.getInstance(getApplicationContext()).getMin(),
+                 true);
+
+                dialogoHora.show();
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +118,7 @@ public class ViewTaskActivity extends AppCompatActivity {
                 String c = description.getText().toString();
                 boolean f = finish.isChecked();
                 String d = date.getText().toString();
+                String h = hora.getText().toString();
                 boolean i = important.isChecked();
 
                 Intent returnIntent = new Intent();
@@ -103,6 +127,7 @@ public class ViewTaskActivity extends AppCompatActivity {
                 returnIntent.putExtra("finish",f);
                 returnIntent.putExtra("date",d);
                 returnIntent.putExtra("important",i);
+                returnIntent.putExtra("hora",h);
 
                 if(created){
                     int id = getIntent().getExtras().getInt("ID");

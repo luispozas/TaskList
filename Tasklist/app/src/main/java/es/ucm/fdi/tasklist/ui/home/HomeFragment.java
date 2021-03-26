@@ -72,17 +72,19 @@ public class HomeFragment extends Fragment {
                             (c.isNull(2))? "" : c.getString(2),
                             (c.isNull(3))? "" : c.getString(3),
                             c.getInt(4) == 0 ? false : true,
-                            c.getInt(5) == 0 ? false : true);
+                            c.getInt(5) == 0 ? false : true,
+                            (c.isNull(6))? "" : c.getString(6));
                 } while (c.moveToNext());
             }
         }
     }
-    public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp){
-        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp);
+
+    public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
+        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
         if (on_off) {
             if (!taskList.contains(detail)) {
                 taskList.add(detail);
-                Log.e("prueba", "add note -> ID:" + _id + " TITLE:" + _title + " DESC:" + _desc + " DATE:" + _date + " FIN:" + _fin + " IMPORTANT:" + _imp);
+                Log.e("prueba", "add note -> ID:" + _id + " TITLE:" + _title + " DESC:" + _desc + " DATE:" + _date + " FIN:" + _fin + " IMPORTANT:" + _imp+ " HORA:" + _hora);
             }
             else{
                 taskList.remove(detail);
@@ -104,7 +106,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openViewViewNotesActivity(taskList.get(position).getId(), taskList.get(position).getTitle(), taskList.get(position).getDesc(),
-                        taskList.get(position).getDate(), taskList.get(position).getFin(), taskList.get(position).getImp());
+                        taskList.get(position).getDate(), taskList.get(position).getFin(), taskList.get(position).getImp(), taskList.get(position).getHora());
             }
         });
 
@@ -128,7 +130,7 @@ public class HomeFragment extends Fragment {
         this.startActivityForResult(notesActivityIntent, 1);
     }
 
-    public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp) {
+    public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp, String hora) {
         Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
         notesActivityIntent.putExtra("CREATED",true);
         notesActivityIntent.putExtra("ID",id);
@@ -137,12 +139,13 @@ public class HomeFragment extends Fragment {
         notesActivityIntent.putExtra("DATE",date);
         notesActivityIntent.putExtra("FINISH",fin);
         notesActivityIntent.putExtra("IMPORTANT",imp);
+        notesActivityIntent.putExtra("HORA",hora);
         this.startActivityForResult(notesActivityIntent, 2);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        String title, content, date;
+        String title, content, date, hora;
         boolean finish;
         boolean important;
         int id;
@@ -151,25 +154,26 @@ public class HomeFragment extends Fragment {
             title = data.getExtras().getString("title");
             content = data.getExtras().getString("content");
             date = data.getExtras().getString("date");
+            hora = data.getExtras().getString("hora");
             finish = data.getExtras().getBoolean("finish");
             important = data.getExtras().getBoolean("important");
 
             if (requestCode == 1) {
                 if (resultCode == Activity.RESULT_OK) {
-                    id = DataBaseTask.getInstance(getContext()).addItem(new TaskDetail(-1, title, content, date, finish, important), db);
-                    updateList(true, id, title, content, date, finish, important);
+                    id = DataBaseTask.getInstance(getContext()).addItem(new TaskDetail(-1, title, content, date, finish, important, hora), db);
+                    updateList(true, id, title, content, date, finish, important, hora);
                 }
             }
 
             if (requestCode == 2) {
                 id = data.getExtras().getInt("id");
                 if (resultCode == Activity.RESULT_OK) {
-                    TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important);
+                    TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(taskDetail, db);
                 }
 
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important);
+                    TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).deleteItem(taskDetail, db);
                 }
             }
