@@ -1,18 +1,30 @@
-package es.ucm.fdi.tasklist.ui.home;
-
-import android.os.Parcelable;
+package es.ucm.fdi.tasklist.db;
 
 public class TaskDetail {
+
+    private int id;
     private String title;
     private String desc;
     private String date;
     private Boolean fin;
 
-    public TaskDetail(String title, String desc, String date, Boolean fin){
+    private Boolean imp;
+
+    public TaskDetail(int id, String title, String desc, String date, boolean fin,  boolean imp){
+        this.id = id;
         this.title = title;
         this.desc = desc;
         this.date = date;
         this.fin = fin;
+        this.imp = imp;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -47,11 +59,18 @@ public class TaskDetail {
         this.fin = fin;
     }
 
+    public Boolean getImp() {
+        return imp;
+    }
+
+    public void setImp(Boolean imp) {
+        this.imp = imp;
+    }
+
     public boolean equals(Object o) {
         if(o instanceof TaskDetail) {
             TaskDetail taskDetail = (TaskDetail) o;
-            return taskDetail.title.equals(this.title) && taskDetail.date.equals(this.date)
-                    && taskDetail.desc.equals(this.desc) && taskDetail.fin.equals(this.fin);
+            return this.id == taskDetail.id;
         }
         return false;
     }

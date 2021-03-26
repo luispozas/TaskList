@@ -1,4 +1,4 @@
-package es.ucm.fdi.tasklist;
+package es.ucm.fdi.tasklist.ui;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -19,19 +19,20 @@ import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 import java.util.Locale;
 
+import es.ucm.fdi.tasklist.R;
+import es.ucm.fdi.tasklist.db.DataBaseTask;
+
 public class ViewTaskActivity extends AppCompatActivity {
 
     EditText title;
     EditText description;
     Button date;
     CheckBox finish;
+    CheckBox important;
     Button delete;
     Button save;
 
-    final Calendar calendario = Calendar.getInstance();
-    int anio = calendario.get(Calendar.YEAR);
-    int mes = calendario.get(Calendar.MONTH);
-    int dia = calendario.get(Calendar.DAY_OF_MONTH);
+    boolean created;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +45,46 @@ public class ViewTaskActivity extends AppCompatActivity {
         description = findViewById(R.id.task_description_edit);
         date = findViewById(R.id.task_date_edit);
         finish = findViewById(R.id.task_finish_edit);
+        important = findViewById(R.id.task_important_edit);
         delete = findViewById(R.id.task_delete_edit);
         save = findViewById(R.id.task_save_edit);
 
+        created = getIntent().getExtras().getBoolean("CREATED");
+        if(created){
+            String t = getIntent().getExtras().getString("TITLE");
+            String c = getIntent().getExtras().getString("CONTENT");
+            String d = getIntent().getExtras().getString("DATE");
+            boolean f = getIntent().getExtras().getBoolean("FINISH");
+            boolean i = getIntent().getExtras().getBoolean("IMPORTANT");
+
+            title.setText(t);
+            description.setText(c);
+            date.setText(d);
+            finish.setChecked(f);
+            important.setChecked(i);
+
+        }
+        else{
+            date.setText(DataBaseTask.getInstance(this).getDate());
+        }
+
+        execListener();
+    }
+
+    private void execListener(){
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog dialogoFecha = new DatePickerDialog(ViewTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        date.setText(getFecha(dayOfMonth, month, year));
+                        date.setText(DataBaseTask.getInstance(getApplicationContext()).getFormatDate(dayOfMonth, month, year));
                     }
-                }, anio, mes, dia);
-                dialogoFecha.show();
+                }, DataBaseTask.getInstance(getApplicationContext()).getAnio(),
+                   DataBaseTask.getInstance(getApplicationContext()).getMes(),
+                   DataBaseTask.getInstance(getApplicationContext()).getDia());
 
+                dialogoFecha.show();
             }
         });
 
@@ -66,14 +93,21 @@ public class ViewTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String t = title.getText().toString();
                 String c = description.getText().toString();
-                Boolean f = finish.isChecked();
+                boolean f = finish.isChecked();
                 String d = date.getText().toString();
+                boolean i = important.isChecked();
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("t",t);
-                returnIntent.putExtra("c",c);
-                returnIntent.putExtra("f",f);
-                returnIntent.putExtra("d",d);
+                returnIntent.putExtra("title",t);
+                returnIntent.putExtra("content",c);
+                returnIntent.putExtra("finish",f);
+                returnIntent.putExtra("date",d);
+                returnIntent.putExtra("important",i);
+
+                if(created){
+                    int id = getIntent().getExtras().getInt("ID");
+                    returnIntent.putExtra("id",id);
+                }
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
             }
@@ -83,31 +117,16 @@ public class ViewTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
+                if(created){
+                    int id = getIntent().getExtras().getInt("ID");
+                    returnIntent.putExtra("id", id);
+                }
                 setResult(Activity.RESULT_CANCELED,returnIntent);
                 finish();
             }
         });
-
-        boolean created = getIntent().getExtras().getBoolean("CREATED");
-        if(created){
-            String t = getIntent().getExtras().getString("TITLE");
-            String c = getIntent().getExtras().getString("CONTENT");
-            String d = getIntent().getExtras().getString("DATE");
-            boolean f = getIntent().getExtras().getBoolean("FINISH");
-
-            title.setText(t);
-            description.setText(c);
-            date.setText(d);
-            finish.setChecked(f);
-        }
-        else{
-            date.setText(getFecha(dia, mes, anio));
-        }
     }
 
-    private String getFecha(int dia, int mes, int anio){
-        return String.format(Locale.getDefault(), "%02d/%02d/%02d", dia, mes+1, anio);
-    }
 
 
 }

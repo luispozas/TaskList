@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:id="@+id/info_task"
-        android:layout_width="401dp"
-        android:layout_height="82dp"
+        android:layout_width="405dp"
+        android:layout_height="81dp"
         android:background="?android:attr/activatedBackgroundIndicator"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:padding="6dip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,32 +22,32 @@
 
         <Button
             android:id="@+id/task_category_list"
-            android:layout_width="18dp"
-            android:layout_height="71dp"
+            android:layout_width="15dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             app:backgroundTint="@color/teal_200"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/task_title_edit"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="316dp"
-            android:layout_height="match_parent"
+            android:layout_width="356dp"
+            android:layout_height="68dp"
+            android:baselineAligned="false"
             android:gravity="left"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/task_title_list"
-                android:layout_width="305dp"
-                android:layout_height="38dp"
+                android:layout_width="346dp"
+                android:layout_height="34dp"
                 android:layout_marginTop="8dp"
                 android:text="Task title"
                 android:textColor="@android:color/black"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/task_date_list"
-                app:layout_constraintEnd_toStartOf="@+id/task_finish_list"
+                app:layout_constraintEnd_toStartOf="@+id/task_important_list"
                 app:layout_constraintHorizontal_bias="0.952"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,27 +55,15 @@
 
             <TextView
                 android:id="@+id/task_date_list"
-                android:layout_width="305dp"
+                android:layout_width="346dp"
                 android:layout_height="23dp"
                 android:text="Task Date"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/task_title_list" />
 
         </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/task_finish_list"
-            android:layout_width="38dp"
-            android:layout_height="71dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
-            android:checked="true"
-            android:clickable="false"
-            android:scaleX="1"
-            android:scaleY="1"
-            app:buttonTint="@color/teal_700" />
-
 
     </LinearLayout>
 

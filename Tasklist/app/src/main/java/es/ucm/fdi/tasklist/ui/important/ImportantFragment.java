@@ -1,11 +1,10 @@
-package es.ucm.fdi.tasklist.ui.home;
+package es.ucm.fdi.tasklist.ui.important;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 import es.ucm.fdi.tasklist.R;
@@ -25,17 +22,17 @@ import es.ucm.fdi.tasklist.db.DataBaseTask;
 import es.ucm.fdi.tasklist.db.TaskDetail;
 import es.ucm.fdi.tasklist.ui.ViewTaskActivity;
 
-public class HomeFragment extends Fragment {
+public class ImportantFragment extends Fragment {
 
     View view;
 
-    private ArrayList<TaskDetail> taskList = new ArrayList();
-    private TaskListAdapter arrayAdapter;
-    private ListView tasklistView;
+    private ArrayList<TaskDetail> importantTaskList = new ArrayList();
+    private TaskImportantListAdapter arrayAdapter;
+    private ListView taskimportantlistview;
 
     SQLiteDatabase db;
 
-    public HomeFragment(){ }
+    public ImportantFragment(){ }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,16 +41,16 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home,container,false);
+        view = inflater.inflate(R.layout.fragment_important,container,false);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tasklistView = view.findViewById(R.id.listTaskView);
-        arrayAdapter = new TaskListAdapter(getContext(), taskList);
-        tasklistView.setAdapter(arrayAdapter);
+        taskimportantlistview = view.findViewById(R.id.listTaskTodayView);
+        arrayAdapter = new TaskImportantListAdapter(getContext(), importantTaskList);
+        taskimportantlistview.setAdapter(arrayAdapter);
         initDataBase();
         execListener();
     }
@@ -66,31 +63,30 @@ public class HomeFragment extends Fragment {
             Cursor c = db.rawQuery("SELECT * FROM tasks", null);
             if (c.moveToFirst()) {
                 do {
-                    updateList(true,
-                            c.getInt(0),
-                            (c.isNull(1))? "" : c.getString(1),
-                            (c.isNull(2))? "" : c.getString(2),
-                            (c.isNull(3))? "" : c.getString(3),
-                            c.getInt(4) == 0 ? false : true,
-                            c.getInt(5) == 0 ? false : true);
+                    if(c.getInt(5) == 1){
+                        updateList(true,
+                                c.getInt(0),
+                                (c.isNull(1))? "" : c.getString(1),
+                                (c.isNull(2))? "" : c.getString(2),
+                                (c.isNull(3))? "" : c.getString(3),
+                                c.getInt(4) == 0 ? false : true,
+                                c.getInt(5) == 0 ? false : true);
+                    }
                 } while (c.moveToNext());
             }
         }
     }
+
     public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp){
         TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp);
         if (on_off) {
-            if (!taskList.contains(detail)) {
-                taskList.add(detail);
-                Log.e("prueba", "add note -> ID:" + _id + " TITLE:" + _title + " DESC:" + _desc + " DATE:" + _date + " FIN:" + _fin + " IMPORTANT:" + _imp);
+            if (importantTaskList.contains(detail)) {
+                importantTaskList.remove(detail);
             }
-            else{
-                taskList.remove(detail);
-                taskList.add(detail);
-            }
+            if(detail.getImp()) importantTaskList.add(detail);
         } else {
-            if (taskList.contains(detail)){
-                taskList.remove(detail);
+            if (importantTaskList.contains(detail)){
+                importantTaskList.remove(detail);
                 db.execSQL("DELETE FROM tasks WHERE id = " +_id);
             }
             else detail = null;
@@ -100,19 +96,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void execListener() {
-        tasklistView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        taskimportantlistview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openViewViewNotesActivity(taskList.get(position).getId(), taskList.get(position).getTitle(), taskList.get(position).getDesc(),
-                        taskList.get(position).getDate(), taskList.get(position).getFin(), taskList.get(position).getImp());
-            }
-        });
-
-        FloatingActionButton fab = getActivity().findViewById(R.id.addNote);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openViewViewNotesActivity();
+                openViewViewNotesActivity(importantTaskList.get(position).getId(), importantTaskList.get(position).getTitle(), importantTaskList.get(position).getDesc(),
+                        importantTaskList.get(position).getDate(), importantTaskList.get(position).getFin(), importantTaskList.get(position).getImp());
             }
         });
     }
@@ -120,12 +108,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    private void openViewViewNotesActivity() {
-        Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
-        notesActivityIntent.putExtra("CREATED",false);
-        this.startActivityForResult(notesActivityIntent, 1);
     }
 
     public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp) {
@@ -153,13 +135,6 @@ public class HomeFragment extends Fragment {
             date = data.getExtras().getString("date");
             finish = data.getExtras().getBoolean("finish");
             important = data.getExtras().getBoolean("important");
-
-            if (requestCode == 1) {
-                if (resultCode == Activity.RESULT_OK) {
-                    id = DataBaseTask.getInstance(getContext()).addItem(new TaskDetail(-1, title, content, date, finish, important), db);
-                    updateList(true, id, title, content, date, finish, important);
-                }
-            }
 
             if (requestCode == 2) {
                 id = data.getExtras().getInt("id");

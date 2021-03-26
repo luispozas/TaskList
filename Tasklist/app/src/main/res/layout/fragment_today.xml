@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.important.ImportantFragment">
 
     <ListView
-        android:id="@+id/listTaskView"
-        android:layout_width="400dp"
-        android:layout_height="728dp"
+        android:id="@+id/listTaskTodayView"
+        android:layout_width="404dp"
+        android:layout_height="729dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

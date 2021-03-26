@@ -7,8 +7,10 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Task</string>
+    <string name="menu_home">All</string>
     <string name="delete_task">DELETE</string>
     <string name="save_task">SAVE</string>
     <string name="setting">Setting</string>
+    <string name="important">Important</string>
+    <string name="today">Today</string>
 </resources>
