@@ -57,7 +57,6 @@ public class DataBaseTask extends SQLiteOpenHelper {
 
         db.insert("tasks", null, contentValues);//Items is table name
 
-
         Cursor c = db.rawQuery("SELECT * FROM tasks", null);
         if(c.moveToLast()){
             return c.getInt(0);
