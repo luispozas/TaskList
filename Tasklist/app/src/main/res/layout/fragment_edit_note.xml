@@ -14,6 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/imprima"
         android:hint="Tarea"
         android:lines="1"
         android:maxLines="10"

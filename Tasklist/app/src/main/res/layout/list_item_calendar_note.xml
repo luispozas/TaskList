@@ -49,6 +49,7 @@
                 android:layout_width="251dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/imprima"
                 android:text="Note"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"

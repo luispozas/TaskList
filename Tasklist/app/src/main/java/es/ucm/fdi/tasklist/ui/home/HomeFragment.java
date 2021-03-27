@@ -168,6 +168,12 @@ public class HomeFragment extends Fragment {
         int id;
 
         if(data != null) {
+            if (requestCode == 1) {
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    return;
+                }
+            }
+
             title = data.getExtras().getString("title");
             content = data.getExtras().getString("content");
             date = data.getExtras().getString("date");
@@ -179,6 +185,7 @@ public class HomeFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     id = DataBaseTask.getInstance(getContext()).addItem(new TaskDetail(-1, title, content, date, finish, important, hora), db);
                     updateList(true, id, title, content, date, finish, important, hora);
+                    return;
                 }
             }
 
@@ -187,11 +194,13 @@ public class HomeFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(taskDetail, db);
+                    return;
                 }
 
                 if (resultCode == Activity.RESULT_CANCELED) {
                     TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).deleteItem(taskDetail, db);
+                    return;
                 }
             }
         }
