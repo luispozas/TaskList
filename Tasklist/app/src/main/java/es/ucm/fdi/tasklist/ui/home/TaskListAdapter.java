@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -27,7 +28,6 @@ public class TaskListAdapter extends ArrayAdapter<TaskDetail> {
         String title = getItem(position).getTitle();
         String date = getItem(position).getDate();
         boolean fin = getItem(position).getFin();
-        boolean imp = getItem(position).getImp();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(R.layout.list_item_note,null);
@@ -35,7 +35,13 @@ public class TaskListAdapter extends ArrayAdapter<TaskDetail> {
         TextView task_title = convertView.findViewById(R.id.task_title_list);
         TextView task_date = convertView.findViewById(R.id.task_date_list);
 
-        if(fin) convertView.setBackgroundColor(Color.rgb(232,232,232));
+        Button category = convertView.findViewById(R.id.task_category_list);
+
+        category.setBackgroundColor(Color.rgb(96, 200, 75));
+
+        convertView.setBackgroundColor(Color.WHITE);
+        if(fin) convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
+
 
         task_title.setText(title);
         task_date.setText(date);

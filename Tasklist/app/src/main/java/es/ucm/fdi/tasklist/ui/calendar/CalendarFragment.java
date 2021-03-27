@@ -1,17 +1,24 @@
 package es.ucm.fdi.tasklist.ui.calendar;
 
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.vivekkaushik.datepicker.DatePickerTimeline;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
@@ -38,19 +45,33 @@ public class CalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_calendar,container,false);
-        taskListCalendarView = view.findViewById(R.id.calendarListView);
-        arrayAdapter = new TaskListCalendarAdapter(getContext(), taskList);
-        taskListCalendarView.setAdapter(arrayAdapter);
+
+        FloatingActionButton button = getActivity().findViewById(R.id.addNote);
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(96, 200, 75)));
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(Color.rgb(96, 200, 75));
+
+        Window window = getActivity().getWindow();
+        window.setNavigationBarColor(Color.rgb(55, 140, 30));
+        window.setStatusBarColor(Color.rgb(55, 140, 30));
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DatePickerTimeline datePickerTimeline = getActivity().findViewById(R.id.datePickerTimeline);
+
+        taskListCalendarView = view.findViewById(R.id.calendarListView);
+        arrayAdapter = new TaskListCalendarAdapter(getContext(), taskList);
+        taskListCalendarView.setAdapter(arrayAdapter);
+
+        DatePickerTimeline datePickerTimeline = view.findViewById(R.id.datePickerTimeline);
 
         datePickerTimeline.setInitialDate(DataBaseTask.getInstance(getContext()).getAnio(),
                 DataBaseTask.getInstance(getContext()).getMes(),

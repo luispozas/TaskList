@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,8 +33,12 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
 
         TextView task_title = convertView.findViewById(R.id.task_title_list);
         TextView task_date = convertView.findViewById(R.id.task_date_list);
+        Button category = convertView.findViewById(R.id.task_category_list);
 
-        if(fin) convertView.setBackgroundColor(Color.rgb(232,232,232));
+        category.setBackgroundColor(Color.rgb(255, 90, 80));
+
+        convertView.setBackgroundColor(Color.WHITE);
+        if(fin) convertView.setBackgroundColor(Color.argb(2,244,67,54));
 
         task_title.setText(title);
         task_date.setText(date);

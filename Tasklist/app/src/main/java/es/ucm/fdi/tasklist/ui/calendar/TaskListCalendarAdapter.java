@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,12 +26,19 @@ public class TaskListCalendarAdapter extends ArrayAdapter<TaskDetail> {
     public View getView(int position, View convertView, ViewGroup parent) {
         String title = getItem(position).getTitle();
         String hour = getItem(position).getHora();
+        boolean fin = getItem(position).getFin();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(R.layout.list_item_calendar_note,null);
 
         TextView task_title = convertView.findViewById(R.id.task_title_calendar_list);
         TextView task_hour = convertView.findViewById(R.id.task_hour_calendar_list);
+        Button category = convertView.findViewById(R.id.task_category_calendar_list);
+
+        category.setBackgroundColor(Color.rgb(96, 200, 75));
+
+        convertView.setBackgroundColor(Color.WHITE);
+        if(fin) convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
 
         task_title.setText(title);
         task_hour.setText(hour);

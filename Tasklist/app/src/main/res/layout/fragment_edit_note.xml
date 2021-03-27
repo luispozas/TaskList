@@ -29,6 +29,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/imprima"
         android:hint="Agregar nota..."
         android:lines="3"
         android:maxLines="10"

@@ -2,18 +2,26 @@ package es.ucm.fdi.tasklist.ui.today;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,9 +48,19 @@ public class TodayFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_today,container,false);
+        FloatingActionButton button = getActivity().findViewById(R.id.addNote);
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(96, 200, 75)));
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(Color.rgb(96, 200, 75));
+
+        Window window = getActivity().getWindow();
+        window.setNavigationBarColor(Color.rgb(55, 140, 30));
+        window.setStatusBarColor(Color.rgb(55, 140, 30));
         return view;
     }
 
