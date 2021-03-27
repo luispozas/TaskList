@@ -26,7 +26,8 @@ public class TaskTodayListAdapter extends ArrayAdapter<TaskDetail> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         String title = getItem(position).getTitle();
-        String date = getItem(position).getDate();
+        String hour = getItem(position).getHora();
+        String desc = getItem(position).getDesc();
         boolean fin = getItem(position).getFin();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -45,7 +46,8 @@ public class TaskTodayListAdapter extends ArrayAdapter<TaskDetail> {
         }
 
         task_title.setText(title);
-        task_date.setText(date);
+
+        task_date.setText(getContext().getString(R.string.hora)+ " " + hour + "   |  "+ getContext().getString(R.string.description) + "  " + desc);
 
         return convertView;
     }

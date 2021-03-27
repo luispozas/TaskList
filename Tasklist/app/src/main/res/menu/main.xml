@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
+        android:checkable="false"
+        android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/eliminar_tareas_completadas"
         app:showAsAction="never" />
 </menu>
