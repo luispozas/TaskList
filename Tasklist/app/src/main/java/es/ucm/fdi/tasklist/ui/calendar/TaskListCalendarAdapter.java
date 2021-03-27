@@ -2,6 +2,7 @@ package es.ucm.fdi.tasklist.ui.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,10 @@ public class TaskListCalendarAdapter extends ArrayAdapter<TaskDetail> {
         category.setBackgroundColor(Color.rgb(96, 200, 75));
 
         convertView.setBackgroundColor(Color.WHITE);
-        if(fin) convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
+        if(fin) {
+            convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
+            task_title.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
         task_title.setText(title);
         task_hour.setText(hour);

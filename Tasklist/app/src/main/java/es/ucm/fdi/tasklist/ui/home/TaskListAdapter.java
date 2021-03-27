@@ -2,6 +2,7 @@ package es.ucm.fdi.tasklist.ui.home;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +35,18 @@ public class TaskListAdapter extends ArrayAdapter<TaskDetail> {
 
         TextView task_title = convertView.findViewById(R.id.task_title_list);
         TextView task_date = convertView.findViewById(R.id.task_date_list);
-
         Button category = convertView.findViewById(R.id.task_category_list);
 
         category.setBackgroundColor(Color.rgb(96, 200, 75));
 
-        convertView.setBackgroundColor(Color.WHITE);
-        if(fin) convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
-
-
         task_title.setText(title);
         task_date.setText(date);
+
+        convertView.setBackgroundColor(Color.WHITE);
+        if(fin){
+            convertView.setBackgroundColor(Color.argb(22, 200, 255, 200));
+            task_title.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
         return convertView;
     }

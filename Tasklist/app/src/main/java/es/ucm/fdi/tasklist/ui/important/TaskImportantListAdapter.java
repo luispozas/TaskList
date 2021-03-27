@@ -2,6 +2,7 @@ package es.ucm.fdi.tasklist.ui.important;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,10 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
         category.setBackgroundColor(Color.rgb(255, 90, 80));
 
         convertView.setBackgroundColor(Color.WHITE);
-        if(fin) convertView.setBackgroundColor(Color.argb(2,244,67,54));
+        if(fin){
+            convertView.setBackgroundColor(Color.argb(2,244,67,54));
+            task_title.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
         task_title.setText(title);
         task_date.setText(date);

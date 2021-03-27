@@ -86,7 +86,7 @@ public class ImportantFragment extends Fragment {
         db = dbHelper.getWritableDatabase();
 
         if (db != null) {
-            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY date ASC", null);
+            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date ASC", null);
             if (c.moveToFirst()) {
                 do {
                     updateList(true,
