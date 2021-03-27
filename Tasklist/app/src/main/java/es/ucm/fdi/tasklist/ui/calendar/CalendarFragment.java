@@ -16,13 +16,9 @@ import com.vivekkaushik.datepicker.DatePickerTimeline;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
 import es.ucm.fdi.tasklist.db.TaskDetail;
-import es.ucm.fdi.tasklist.ui.home.TaskListAdapter;
 
 public class CalendarFragment extends Fragment {
 
@@ -64,6 +60,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
                 taskList.clear();
+                arrayAdapter.notifyDataSetChanged();
                 dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(day, month, year);
                 initDataBase();
             }
