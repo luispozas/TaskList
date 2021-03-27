@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import es.ucm.fdi.tasklist.db.DataBaseTask;
+import es.ucm.fdi.tasklist.db.TaskDetail;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
                     if (c.moveToFirst()) {
                         do {
                             if(c.getInt(4) == 0 ? false : true){
-                                db.execSQL("DELETE FROM tasks WHERE id = " +c.getInt(0));
+                                DataBaseTask.getInstance(getApplicationContext()).
+                                        deleteItem(new TaskDetail(c.getInt(0), null, null, null, false, false, null), db);
                             }
                         } while (c.moveToNext());
                     }

@@ -25,9 +25,10 @@ import com.vivekkaushik.datepicker.OnDateSelectedListener;
 import java.util.ArrayList;
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
+import es.ucm.fdi.tasklist.db.ObserverDao;
 import es.ucm.fdi.tasklist.db.TaskDetail;
 
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements ObserverDao {
 
     View view;
 
@@ -43,6 +44,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBaseTask.getInstance(getContext()).addObserver(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -80,8 +82,6 @@ public class CalendarFragment extends Fragment {
         datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
-                taskList.clear();
-                arrayAdapter.notifyDataSetChanged();
                 dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(day, month, year);
                 initDataBase();
             }
@@ -98,11 +98,13 @@ public class CalendarFragment extends Fragment {
     }
 
     public void initDataBase(){
+        taskList.clear();
+        arrayAdapter.notifyDataSetChanged();
         DataBaseTask dbHelper = DataBaseTask.getInstance(getContext());
         db = dbHelper.getWritableDatabase();
 
         if (db != null) {
-            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date ASC", null);
+            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, hora ASC", null);
             if (c.moveToFirst()) {
                 do {
                     if(dateSelect.equals((c.isNull(3))? "" : c.getString(3))){

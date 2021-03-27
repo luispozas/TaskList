@@ -28,10 +28,11 @@ import java.util.Calendar;
 
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
+import es.ucm.fdi.tasklist.db.ObserverDao;
 import es.ucm.fdi.tasklist.db.TaskDetail;
 import es.ucm.fdi.tasklist.ui.ViewTaskActivity;
 
-public class TodayFragment extends Fragment {
+public class TodayFragment extends Fragment implements ObserverDao {
 
     View view;
 
@@ -46,6 +47,7 @@ public class TodayFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBaseTask.getInstance(getContext()).addObserver(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -75,6 +77,8 @@ public class TodayFragment extends Fragment {
     }
 
     public void initDataBase(){
+        todayTaskList.clear();
+        arrayAdapter.notifyDataSetChanged();
         DataBaseTask dbHelper = DataBaseTask.getInstance(getContext());
         db = dbHelper.getWritableDatabase();
 
@@ -82,8 +86,7 @@ public class TodayFragment extends Fragment {
             Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date ASC", null);
             if (c.moveToFirst()) {
                 do {
-                    updateList(true,
-                            c.getInt(0),
+                    updateList(c.getInt(0),
                             (c.isNull(1))? "" : c.getString(1),
                             (c.isNull(2))? "" : c.getString(2),
                             (c.isNull(3))? "" : c.getString(3),
@@ -95,20 +98,15 @@ public class TodayFragment extends Fragment {
         }
     }
 
-    public TaskDetail updateList(boolean on_off, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
+    public TaskDetail updateList(int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
         TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
-        if (on_off) {
-            if (todayTaskList.contains(detail)) {
-                todayTaskList.remove(detail);
-            }
-            if(detail.getDate().equals(DataBaseTask.getInstance(getContext()).getDate())) todayTaskList.add(detail);
-        } else {
-            if (todayTaskList.contains(detail)){
-                todayTaskList.remove(detail);
-                db.execSQL("DELETE FROM tasks WHERE id = " +_id);
-            }
-            else detail = null;
+
+        if (todayTaskList.contains(detail)) todayTaskList.remove(detail);
+
+        if(detail.getDate().equals(DataBaseTask.getInstance(getContext()).getDate())) {
+            todayTaskList.add(detail);
         }
+
         arrayAdapter.notifyDataSetChanged();
         return detail;
     }
@@ -159,12 +157,12 @@ public class TodayFragment extends Fragment {
             if (requestCode == 2) {
                 id = data.getExtras().getInt("id");
                 if (resultCode == Activity.RESULT_OK) {
-                    TaskDetail taskDetail = updateList(true, id, title, content, date, finish, important, hora);
+                    TaskDetail taskDetail = new TaskDetail(id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(taskDetail, db);
                 }
 
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    TaskDetail taskDetail = updateList(false, id, title, content, date, finish, important, hora);
+                    TaskDetail taskDetail = new TaskDetail(id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).deleteItem(taskDetail, db);
                 }
             }

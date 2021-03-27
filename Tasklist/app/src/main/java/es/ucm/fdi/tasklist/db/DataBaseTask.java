@@ -1,11 +1,13 @@
 package es.ucm.fdi.tasklist.db;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -31,6 +33,20 @@ public class DataBaseTask extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    private ArrayList<ObserverDao> observers = new ArrayList<ObserverDao>();
+
+    public void addObserver(ObserverDao o){
+        if(!observers.contains(o)){
+            observers.add(o);
+        }
+    }
+
+    public void notifyObservers(){
+        for(ObserverDao o : observers){
+            o.initDataBase();
+        }
+    }
+
     public static DataBaseTask getInstance(Context context){
         if(INSTANCE == null) INSTANCE = new DataBaseTask(context);
         return INSTANCE;
@@ -43,10 +59,10 @@ public class DataBaseTask extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        notifyObservers();
     }
 
-    public int addItem(TaskDetail td, SQLiteDatabase db) {
+    public void addItem(TaskDetail td, SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", td.getTitle().isEmpty()? null:td.getTitle());
         contentValues.put("description", td.getDesc().isEmpty()? null:td.getDesc());
@@ -55,13 +71,8 @@ public class DataBaseTask extends SQLiteOpenHelper {
         contentValues.put("fin", td.getFin()? 1:0);
         contentValues.put("important", td.getImp()? 1:0);
 
-        db.insert("tasks", null, contentValues);//Items is table name
-
-        Cursor c = db.rawQuery("SELECT * FROM tasks", null);
-        if(c.moveToLast()){
-            return c.getInt(0);
-        }
-        return -1;
+        db.insert("tasks", null, contentValues);
+        notifyObservers();
     }
 
     public void updateItem(TaskDetail td, SQLiteDatabase db) {
@@ -76,12 +87,14 @@ public class DataBaseTask extends SQLiteOpenHelper {
         String whereClause = "id=?";
         String whereArgs[] = {String.valueOf(td.getId())};
         db.update("tasks", contentValues, whereClause, whereArgs);
+        notifyObservers();
     }
 
     public void deleteItem(TaskDetail td, SQLiteDatabase db) {
         String whereClause = "id=?";
         String whereArgs[] = {String.valueOf(td.getId())};
         db.delete("tasks", whereClause, whereArgs);
+        notifyObservers();
     }
 
     public String getFormatDate(int dia, int mes, int anio){
