@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="356dp"
+            android:layout_width="274dp"
             android:layout_height="68dp"
             android:baselineAligned="false"
             android:gravity="left"
@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/task_title_list"
-                android:layout_width="346dp"
+                android:layout_width="257dp"
                 android:layout_height="34dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/imprima"
@@ -56,7 +56,7 @@
 
             <TextView
                 android:id="@+id/task_date_list"
-                android:layout_width="346dp"
+                android:layout_width="257dp"
                 android:layout_height="23dp"
                 android:maxLines="1"
                 android:text="Date/Desc"
@@ -66,6 +66,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/task_title_list" />
 
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBoxImportant"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:layout_weight="1"
+            android:button="@drawable/ic_baseline_label_important_24" />
+
+        <CheckBox
+            android:id="@+id/checkBoxFinish"
+            android:layout_width="wrap_content"
+            android:layout_height="67dp"
+            android:button="@drawable/ic_baseline_done_outline_24" />
 
     </LinearLayout>
 

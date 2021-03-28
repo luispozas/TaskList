@@ -47,21 +47,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_finish_edit" />
-
-    <CheckBox
-        android:id="@+id/task_important_edit"
-        android:layout_width="137dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="8dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:text="  Importante"
-        android:textSize="12sp"
-        app:buttonTint="@color/teal_700"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_hour_edit" />
 
     <ImageView
@@ -95,21 +80,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCalendar"
         app:srcCompat="@drawable/ic_baseline_more_time_24" />
-
-    <CheckBox
-        android:id="@+id/task_finish_edit"
-        android:layout_width="134dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="8dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:text="  Completada"
-        android:textSize="12sp"
-        app:buttonTint="@color/brightGreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_important_edit" />
 
     <EditText
         android:id="@+id/task_date_edit"

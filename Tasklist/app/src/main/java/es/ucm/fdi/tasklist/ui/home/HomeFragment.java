@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,8 @@ public class HomeFragment extends Fragment implements ObserverDao {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tasklistView = view.findViewById(R.id.listTaskView);
+        ImageView emptyList = view.findViewById(R.id.emptyListHome);
+        tasklistView.setEmptyView(emptyList);
         arrayAdapter = new TaskListAdapter(getContext(), taskList);
         tasklistView.setAdapter(arrayAdapter);
         initDataBase();

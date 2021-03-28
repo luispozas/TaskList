@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -72,6 +73,8 @@ public class CalendarFragment extends Fragment implements ObserverDao {
         super.onViewCreated(view, savedInstanceState);
 
         taskListCalendarView = view.findViewById(R.id.calendarListView);
+        ImageView emptyList = view.findViewById(R.id.emptyList);
+        taskListCalendarView.setEmptyView(emptyList);
         arrayAdapter = new TaskListCalendarAdapter(getContext(), taskList);
         taskListCalendarView.setAdapter(arrayAdapter);
 

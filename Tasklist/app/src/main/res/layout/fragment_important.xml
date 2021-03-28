@@ -8,14 +8,24 @@
     android:background="#17F44336"
     tools:context=".ui.important.ImportantFragment">
 
-    <ListView
-        android:id="@+id/listTaskImportantView"
-        android:layout_width="410dp"
-        android:layout_height="688dp"
+    <ImageView
+        android:id="@+id/emptyListImportant"
+        android:layout_width="155dp"
+        android:layout_height="216dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.488" />
+        app:srcCompat="@drawable/ic_baseline_done_all_24" />
+
+    <ListView
+        android:id="@+id/listTaskImportantView"
+        android:layout_width="405dp"
+        android:layout_height="635dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.166" />
 </androidx.constraintlayout.widget.ConstraintLayout>

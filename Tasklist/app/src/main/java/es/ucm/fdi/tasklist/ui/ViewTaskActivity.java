@@ -41,8 +41,8 @@ public class ViewTaskActivity extends AppCompatActivity {
     EditText description;
     EditText date;
     EditText hora;
-    CheckBox finish;
-    CheckBox important;
+    boolean finish;
+    boolean important;
     ImageView calendar;
     ImageView clock;
     boolean created;
@@ -62,8 +62,6 @@ public class ViewTaskActivity extends AppCompatActivity {
         description = findViewById(R.id.task_description_edit);
         date = findViewById(R.id.task_date_edit);
         hora = findViewById(R.id.task_hour_edit);
-        finish = findViewById(R.id.task_finish_edit);
-        important = findViewById(R.id.task_important_edit);
         calendar = findViewById(R.id.imageViewCalendar);
         clock = findViewById(R.id.imageViewHour);
 
@@ -75,14 +73,12 @@ public class ViewTaskActivity extends AppCompatActivity {
             String c = getIntent().getExtras().getString("CONTENT");
             String d = getIntent().getExtras().getString("DATE");
             String h = getIntent().getExtras().getString("HORA");
-            boolean f = getIntent().getExtras().getBoolean("FINISH");
-            boolean i = getIntent().getExtras().getBoolean("IMPORTANT");
+            finish = getIntent().getExtras().getBoolean("FINISH");
+            important = getIntent().getExtras().getBoolean("IMPORTANT");
 
             title.setText(t);
             description.setText(c);
             date.setText(d);
-            finish.setChecked(f);
-            important.setChecked(i);
             hora.setText(h);
 
         }
@@ -100,17 +96,15 @@ public class ViewTaskActivity extends AppCompatActivity {
     public void onBackPressed() {
         String t = title.getText().toString();
         String c = description.getText().toString();
-        boolean f = finish.isChecked();
         String d = date.getText().toString();
         String h = hora.getText().toString();
-        boolean i = important.isChecked();
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title",t);
         returnIntent.putExtra("content",c);
-        returnIntent.putExtra("finish",f);
+        returnIntent.putExtra("finish",finish);
         returnIntent.putExtra("date",d);
-        returnIntent.putExtra("important",i);
+        returnIntent.putExtra("important",important);
         returnIntent.putExtra("hora",h);
 
         if(created){

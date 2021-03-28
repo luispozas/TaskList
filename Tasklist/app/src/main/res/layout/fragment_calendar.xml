@@ -21,20 +21,23 @@
 
     <ListView
         android:id="@+id/calendarListView"
-        android:layout_width="374dp"
-        android:layout_height="541dp"
+        android:layout_width="369dp"
+        android:layout_height="552dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePickerTimeline" />
+        app:layout_constraintTop_toBottomOf="@+id/datePickerTimeline">
+
+    </ListView>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="20dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/calendarListView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/datePickerTimeline" />
 
@@ -46,5 +49,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24" />
+
+    <ImageView
+        android:id="@+id/emptyList"
+        android:layout_width="155dp"
+        android:layout_height="216dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:srcCompat="@drawable/ic_baseline_done_all_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

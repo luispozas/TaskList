@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -69,6 +70,8 @@ public class TodayFragment extends Fragment implements ObserverDao {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         taskTodayListView = view.findViewById(R.id.listTaskTodayView);
+        ImageView emptyList = view.findViewById(R.id.emptyListToday);
+        taskTodayListView.setEmptyView(emptyList);
         arrayAdapter = new TaskTodayListAdapter(getContext(), todayTaskList);
         taskTodayListView.setAdapter(arrayAdapter);
         initDataBase();

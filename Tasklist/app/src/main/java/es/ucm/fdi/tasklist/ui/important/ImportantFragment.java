@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,8 @@ public class ImportantFragment extends Fragment implements ObserverDao {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         taskimportantlistview = view.findViewById(R.id.listTaskImportantView);
+        ImageView emptyList = view.findViewById(R.id.emptyListImportant);
+        taskimportantlistview.setEmptyView(emptyList);
         arrayAdapter = new TaskImportantListAdapter(getContext(), importantTaskList);
         taskimportantlistview.setAdapter(arrayAdapter);
         initDataBase();
