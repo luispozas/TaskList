@@ -18,4 +18,6 @@
     <string name="description">DESCRIPCIÓN:</string>
     <string name="eliminar_tareas_completadas">Eliminar tareas completadas</string>
     <string name="nuevaTarea">Nueva tarea</string>
+    <string name="editarTarea">Editar tarea</string>
+    <string name="complete">Completada</string>
 </resources>
