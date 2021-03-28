@@ -17,4 +17,5 @@
     <string name="hora">HORA:</string>
     <string name="description">DESCRIPCIÓN:</string>
     <string name="eliminar_tareas_completadas">Eliminar tareas completadas</string>
+    <string name="nuevaTarea">Nueva tarea</string>
 </resources>

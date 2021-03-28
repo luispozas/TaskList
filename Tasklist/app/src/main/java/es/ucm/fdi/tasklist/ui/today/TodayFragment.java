@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;

@@ -3,21 +3,16 @@ package es.ucm.fdi.tasklist.ui.important;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -30,7 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import es.ucm.fdi.tasklist.MainActivity;
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
 import es.ucm.fdi.tasklist.db.ObserverDao;

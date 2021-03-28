@@ -45,6 +45,10 @@ public class CalendarFragment extends Fragment implements ObserverDao {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DataBaseTask.getInstance(getContext()).addObserver(this);
+        dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(
+                DataBaseTask.getInstance(getContext()).getDia(),
+                DataBaseTask.getInstance(getContext()).getMes(),
+                DataBaseTask.getInstance(getContext()).getAnio());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
