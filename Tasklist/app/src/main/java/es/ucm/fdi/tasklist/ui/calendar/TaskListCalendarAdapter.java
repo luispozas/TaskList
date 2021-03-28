@@ -10,9 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import es.ucm.fdi.tasklist.R;
+import es.ucm.fdi.tasklist.db.DataBaseTask;
 import es.ucm.fdi.tasklist.db.TaskDetail;
 
 public class TaskListCalendarAdapter extends ArrayAdapter<TaskDetail> {

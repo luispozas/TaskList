@@ -23,6 +23,8 @@ import com.vivekkaushik.datepicker.DatePickerTimeline;
 import com.vivekkaushik.datepicker.OnDateSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
 import es.ucm.fdi.tasklist.db.ObserverDao;
@@ -45,10 +47,6 @@ public class CalendarFragment extends Fragment implements ObserverDao {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DataBaseTask.getInstance(getContext()).addObserver(this);
-        dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(
-                DataBaseTask.getInstance(getContext()).getDia(),
-                DataBaseTask.getInstance(getContext()).getMes(),
-                DataBaseTask.getInstance(getContext()).getAnio());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -77,11 +75,19 @@ public class CalendarFragment extends Fragment implements ObserverDao {
         arrayAdapter = new TaskListCalendarAdapter(getContext(), taskList);
         taskListCalendarView.setAdapter(arrayAdapter);
 
-        DatePickerTimeline datePickerTimeline = view.findViewById(R.id.datePickerTimeline);
+        dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(
+                DataBaseTask.getInstance(getContext()).getDia(),
+                DataBaseTask.getInstance(getContext()).getMes(),
+                DataBaseTask.getInstance(getContext()).getAnio());
 
+        initDataBase();
+
+        DatePickerTimeline datePickerTimeline = view.findViewById(R.id.datePickerTimeline);
         datePickerTimeline.setInitialDate(DataBaseTask.getInstance(getContext()).getAnio(),
                 DataBaseTask.getInstance(getContext()).getMes(),
                 DataBaseTask.getInstance(getContext()).getDia());
+
+        datePickerTimeline.setActiveDate(Calendar.getInstance());
 
         datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
@@ -95,10 +101,6 @@ public class CalendarFragment extends Fragment implements ObserverDao {
                 // Do Something
             }
         });
-
-        // Disable date
-        //Date[] dates = {Calendar.getInstance().getTime()};
-        //datePickerTimeline.deactivateDates(dates);
     }
 
     public void initDataBase(){
