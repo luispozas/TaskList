@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,8 @@ public class ImportantFragment extends Fragment implements ObserverDao {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBaseTask.getInstance(getContext()).addObserver(this);
+        setRetainInstance(true);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -59,6 +61,7 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(Color.rgb(255, 90, 80));
 
+        /* Ponemos un color determinado de la aplicacion para esta vista. */
         Window window = getActivity().getWindow();
         window.setNavigationBarColor(Color.rgb(195, 45, 35));
         window.setStatusBarColor(Color.rgb(195, 45, 35));
@@ -66,31 +69,68 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         return inflater.inflate(R.layout.fragment_important,container,false);
     }
 
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         taskimportantlistview = view.findViewById(R.id.listTaskImportantView);
         ImageView emptyList = view.findViewById(R.id.emptyListImportant);
         taskimportantlistview.setEmptyView(emptyList);
+
         arrayAdapter = new TaskImportantListAdapter(getContext(), importantTaskList);
         taskimportantlistview.setAdapter(arrayAdapter);
-        initDataBase();
+
         execListener();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(importantTaskList.isEmpty()){
+            initDataBase();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("importantTaskList", importantTaskList);
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null)
+            importantTaskList = savedInstanceState.getParcelableArrayList("importantTaskList");
+
+    }
+
     public void initDataBase(){
-        importantTaskList.clear();
-        arrayAdapter.notifyDataSetChanged();
         DataBaseTask dbHelper = DataBaseTask.getInstance(getContext());
         db = dbHelper.getWritableDatabase();
+
+        Log.e("prueba", "Init Database");
 
         if (db != null) {
             Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date ASC", null);
             if (c.moveToFirst()) {
                 do {
-                    updateList(c.getInt(0),
+                    updateList(false, c.getInt(0),
                             (c.isNull(1))? "" : c.getString(1),
                             (c.isNull(2))? "" : c.getString(2),
                             (c.isNull(3))? "" : c.getString(3),
@@ -102,12 +142,21 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         }
     }
 
-    public TaskDetail updateList(int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
+    public TaskDetail updateList(boolean remove, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
         TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
-
-        if (importantTaskList.contains(detail)) importantTaskList.remove(detail);
-
-        if(detail.getImp()) importantTaskList.add(detail);
+        if(remove) importantTaskList.remove(detail);
+        else{
+            if (!importantTaskList.contains(detail)) {
+                if(detail.getImp()) {
+                    importantTaskList.add(detail);
+                    Log.e("prueba", "Add Task IMPORTANT -> ID:" + _id + " TITLE:" + _title + " DESC:" + _desc + " DATE:" + _date + " FIN:" + _fin + " IMPORTANT:" + _imp+ " HORA:" + _hora);
+                }
+            }
+            else{
+                importantTaskList.remove(detail);
+                if(detail.getImp()) importantTaskList.add(detail);
+            }
+        }
         arrayAdapter.notifyDataSetChanged();
         return detail;
     }
@@ -122,12 +171,7 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    public void openViewViewNotesActivity(int id, String title, String content, String date, boolean fin, boolean imp, String hora) {
+    public void openViewViewNotesActivity(long id, String title, String content, String date, boolean fin, boolean imp, String hora) {
         Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
         notesActivityIntent.putExtra("CREATED",true);
         notesActivityIntent.putExtra("ID",id);
@@ -158,13 +202,12 @@ public class ImportantFragment extends Fragment implements ObserverDao {
             if (requestCode == 2) {
                 id = data.getExtras().getInt("id");
                 if (resultCode == Activity.RESULT_OK) {
-                    TaskDetail taskDetail = new TaskDetail(id, title, content, date, finish, important, hora);
-                    DataBaseTask.getInstance(getContext()).updateItem(taskDetail, db);
+                    TaskDetail td = updateList(false, id, title, content, date, finish, important, hora);
+                    DataBaseTask.getInstance(getContext()).updateItem(td, db);
                 }
-
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    TaskDetail taskDetail = new TaskDetail(id, title, content, date, finish, important, hora);
-                    DataBaseTask.getInstance(getContext()).deleteItem(taskDetail, db);
+                else if (resultCode == Activity.RESULT_CANCELED) {
+                    DataBaseTask.getInstance(getContext()).deleteItem(new TaskDetail(id, title, content, date, finish, important, hora), db);
+                    updateList(true, id, title, content, date, finish, important, hora);
                 }
             }
         }

@@ -59,10 +59,10 @@ public class DataBaseTask extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        notifyObservers();
+
     }
 
-    public void addItem(TaskDetail td, SQLiteDatabase db) {
+    public long addItem(TaskDetail td, SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", td.getTitle().isEmpty()? null:td.getTitle());
         contentValues.put("description", td.getDesc().isEmpty()? null:td.getDesc());
@@ -71,8 +71,9 @@ public class DataBaseTask extends SQLiteOpenHelper {
         contentValues.put("fin", td.getFin()? 1:0);
         contentValues.put("important", td.getImp()? 1:0);
 
-        db.insert("tasks", null, contentValues);
-        notifyObservers();
+        long i = db.insert("tasks", null, contentValues);
+
+        return i;
     }
 
     public void updateItem(TaskDetail td, SQLiteDatabase db) {
@@ -87,14 +88,12 @@ public class DataBaseTask extends SQLiteOpenHelper {
         String whereClause = "id=?";
         String whereArgs[] = {String.valueOf(td.getId())};
         db.update("tasks", contentValues, whereClause, whereArgs);
-        notifyObservers();
     }
 
     public void deleteItem(TaskDetail td, SQLiteDatabase db) {
         String whereClause = "id=?";
         String whereArgs[] = {String.valueOf(td.getId())};
         db.delete("tasks", whereClause, whereArgs);
-        notifyObservers();
     }
 
     public String getFormatDate(int dia, int mes, int anio){

@@ -31,7 +31,7 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int id = getItem(position).getId();
+        long id = getItem(position).getId();
         String title = getItem(position).getTitle();
         String desc = getItem(position).getDesc();
         String date = getItem(position).getDate();
@@ -56,6 +56,8 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
         task_fin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getItem(position).setFin(buttonView.isChecked());
+                notifyDataSetChanged();
                 DataBaseTask.getInstance(getContext()).updateItem(new TaskDetail(id, title, desc, date, buttonView.isChecked(), imp, hour),DataBaseTask.getInstance(getContext()).getWritableDatabase());
             }
         });
@@ -63,6 +65,8 @@ public class TaskImportantListAdapter extends ArrayAdapter<TaskDetail> {
         task_imp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getItem(position).setImp(buttonView.isChecked());
+                notifyDataSetChanged();
                 DataBaseTask.getInstance(getContext()).updateItem(new TaskDetail(id, title, desc, date, fin, buttonView.isChecked(), hour),DataBaseTask.getInstance(getContext()).getWritableDatabase());
             }
         });

@@ -1,17 +1,22 @@
 package es.ucm.fdi.tasklist.db;
 
-public class TaskDetail {
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    private int id;
+import androidx.annotation.RequiresApi;
+
+public class TaskDetail implements Parcelable {
+
+    private long id;
     private String title;
     private String desc;
     private String date;
     private String hora;
     private Boolean fin;
-
     private Boolean imp;
 
-    public TaskDetail(int id, String title, String desc, String date, boolean fin,  boolean imp, String hora){
+    public TaskDetail(long id, String title, String desc, String date, boolean fin,  boolean imp, String hora){
         this.id = id;
         this.title = title;
         this.desc = desc;
@@ -21,7 +26,31 @@ public class TaskDetail {
         this.hora = hora;
     }
 
-    public int getId() {
+    protected TaskDetail(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        desc = in.readString();
+        date = in.readString();
+        hora = in.readString();
+        byte tmpFin = in.readByte();
+        fin = tmpFin == 0 ? null : tmpFin == 1;
+        byte tmpImp = in.readByte();
+        imp = tmpImp == 0 ? null : tmpImp == 1;
+    }
+
+    public static final Creator<TaskDetail> CREATOR = new Creator<TaskDetail>() {
+        @Override
+        public TaskDetail createFromParcel(Parcel in) {
+            return new TaskDetail(in);
+        }
+
+        @Override
+        public TaskDetail[] newArray(int size) {
+            return new TaskDetail[size];
+        }
+    };
+
+    public long getId() {
         return id;
     }
 
@@ -83,5 +112,22 @@ public class TaskDetail {
             return this.id == taskDetail.id;
         }
         return false;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(desc);
+        dest.writeString(date);
+        dest.writeString(hora);
+        dest.writeBoolean(fin);
+        dest.writeBoolean(imp);
     }
 }
