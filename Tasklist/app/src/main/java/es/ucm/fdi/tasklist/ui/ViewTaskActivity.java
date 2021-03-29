@@ -35,17 +35,16 @@ import es.ucm.fdi.tasklist.db.DataBaseTask;
 
 public class ViewTaskActivity extends AppCompatActivity {
 
-    private static final String TAG = "ViewTaskActivity";
-    private static final String CHANNEL_ID = "notification";
-    EditText title;
-    EditText description;
-    EditText date;
-    EditText hora;
-    boolean finish;
-    boolean important;
-    ImageView calendar;
-    ImageView clock;
-    boolean created;
+    private EditText title;
+    private EditText description;
+    private  EditText date;
+    private EditText hora;
+    private  boolean finish;
+    private boolean important;
+    private  ImageView calendar;
+    private ImageView clock;
+    private boolean created;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -108,7 +107,7 @@ public class ViewTaskActivity extends AppCompatActivity {
         returnIntent.putExtra("hora",h);
 
         if(created){
-            int id = getIntent().getExtras().getInt("ID");
+            long id = getIntent().getExtras().getLong("ID");
             returnIntent.putExtra("id",id);
         }
         setResult(Activity.RESULT_OK,returnIntent);

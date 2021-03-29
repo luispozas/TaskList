@@ -152,6 +152,7 @@ public class HomeFragment extends Fragment implements ObserverDao {
             else{
                 taskList.remove(detail);
                 taskList.add(detail);
+                Log.e("prueba", "UPDATE Task ALL -> ID:" + _id + " TITLE:" + _title + " DESC:" + _desc + " DATE:" + _date + " FIN:" + _fin + " IMPORTANT:" + _imp+ " HORA:" + _hora);
             }
         }
         arrayAdapter.notifyDataSetChanged();
@@ -200,7 +201,7 @@ public class HomeFragment extends Fragment implements ObserverDao {
         String title, content, date, hora;
         boolean finish;
         boolean important;
-        int id;
+        long id;
 
         if(data != null) {
             if (requestCode == 1 && resultCode == Activity.RESULT_CANCELED) return;
@@ -219,7 +220,7 @@ public class HomeFragment extends Fragment implements ObserverDao {
                 }
             }
             else if (requestCode == 2) {
-                id = data.getExtras().getInt("id");
+                id = data.getExtras().getLong("id");
                 if (resultCode == Activity.RESULT_OK) {
                     TaskDetail td = updateList(false, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(td, db);

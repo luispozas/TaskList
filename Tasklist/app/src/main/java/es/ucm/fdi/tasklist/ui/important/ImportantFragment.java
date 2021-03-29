@@ -142,7 +142,7 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         }
     }
 
-    public TaskDetail updateList(boolean remove, int _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
+    public TaskDetail updateList(boolean remove, long _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
         TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
         if(remove) importantTaskList.remove(detail);
         else{
@@ -189,7 +189,7 @@ public class ImportantFragment extends Fragment implements ObserverDao {
         String title, content, date, hora;
         boolean finish;
         boolean important;
-        int id;
+        long id;
 
         if(data != null) {
             title = data.getExtras().getString("title");
@@ -200,7 +200,7 @@ public class ImportantFragment extends Fragment implements ObserverDao {
             important = data.getExtras().getBoolean("important");
 
             if (requestCode == 2) {
-                id = data.getExtras().getInt("id");
+                id = data.getExtras().getLong("id");
                 if (resultCode == Activity.RESULT_OK) {
                     TaskDetail td = updateList(false, id, title, content, date, finish, important, hora);
                     DataBaseTask.getInstance(getContext()).updateItem(td, db);
