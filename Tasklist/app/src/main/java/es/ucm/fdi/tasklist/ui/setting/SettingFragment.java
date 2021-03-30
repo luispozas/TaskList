@@ -114,7 +114,8 @@ public class SettingFragment extends Fragment {
             Cursor c = db.rawQuery("SELECT * FROM category ORDER BY name  ASC", null);
             if (c.moveToFirst()) {
                 do {
-                    categoryList.add(new Categories((c.isNull(0))? "" : c.getString(0), c.getInt(1)));
+                    if(!c.getString(0).equals(getString(R.string.categoryDefault)))
+                        categoryList.add(new Categories((c.isNull(0))? "" : c.getString(0), c.getInt(1)));
                 } while (c.moveToNext());
             }
         }
