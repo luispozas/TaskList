@@ -6,17 +6,19 @@ import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 
-public class TaskDetail implements Parcelable {
+public class TaskDetail implements Parcelable, Comparable<TaskDetail> {
 
     private long id;
     private String title;
     private String desc;
     private String date;
     private String hora;
-    private Boolean fin;
-    private Boolean imp;
+    private boolean fin;
+    private boolean imp;
+    private int color;
+    private String type;
 
-    public TaskDetail(long id, String title, String desc, String date, boolean fin,  boolean imp, String hora){
+    public TaskDetail(long id, String title, String desc, String date, boolean fin,  boolean imp, String hora, int color, String type){
         this.id = id;
         this.title = title;
         this.desc = desc;
@@ -24,21 +26,25 @@ public class TaskDetail implements Parcelable {
         this.fin = fin;
         this.imp = imp;
         this.hora = hora;
+        this.color = color;
+        this.type = type;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     protected TaskDetail(Parcel in) {
         id = in.readLong();
         title = in.readString();
         desc = in.readString();
         date = in.readString();
         hora = in.readString();
-        byte tmpFin = in.readByte();
-        fin = tmpFin == 0 ? null : tmpFin == 1;
-        byte tmpImp = in.readByte();
-        imp = tmpImp == 0 ? null : tmpImp == 1;
+        fin = in.readBoolean();
+        imp = in.readBoolean();
+        color = in.readInt();
+        type = in.readString();
     }
 
     public static final Creator<TaskDetail> CREATOR = new Creator<TaskDetail>() {
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
         public TaskDetail createFromParcel(Parcel in) {
             return new TaskDetail(in);
@@ -106,10 +112,28 @@ public class TaskDetail implements Parcelable {
         this.imp = imp;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         if(o instanceof TaskDetail) {
             TaskDetail taskDetail = (TaskDetail) o;
-            return this.id == taskDetail.id;
+            return this.id == taskDetail.getId();
         }
         return false;
     }
@@ -129,5 +153,23 @@ public class TaskDetail implements Parcelable {
         dest.writeString(hora);
         dest.writeBoolean(fin);
         dest.writeBoolean(imp);
+        dest.writeInt(color);
+        dest.writeString(type);
+    }
+
+
+    @Override
+    public int compareTo(TaskDetail o) {
+        if(Boolean.compare(fin, o.fin)==0){
+            if(date.compareTo(o.date) == 0){
+                return hora.compareTo(o.hora);
+            }
+            else{
+                return date.compareTo(o.date);
+            }
+        }
+        else{
+            return Boolean.compare(fin, o.fin);
+        }
     }
 }

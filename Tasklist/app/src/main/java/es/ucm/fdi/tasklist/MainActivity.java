@@ -1,9 +1,9 @@
 package es.ucm.fdi.tasklist;
 
-import android.app.Fragment;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,7 +13,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -49,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        //Inicializo la base de datos de categorias con la de defecto.
+        DataBaseTask db = DataBaseTask.getInstance(getApplicationContext());
+        db.addCategoryItem("Categoria:", Color.rgb(96, 200, 75), db.getWritableDatabase());
     }
 
     @Override
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         do {
                             if(c.getInt(4) == 0 ? false : true){
                                 DataBaseTask.getInstance(getApplicationContext()).
-                                        deleteItem(new TaskDetail(c.getInt(0), null, null, null, false, false, null), db);
+                                        deleteTaskItem(new TaskDetail(c.getInt(0), null, null, null, false, false, null, -1, null), db);
                             }
                         } while (c.moveToNext());
                     }

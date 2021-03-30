@@ -9,6 +9,17 @@
     tools:context=".ui.ViewTaskActivity"
     android:orientation="horizontal">
 
+    <Spinner
+        android:id="@+id/spinnerCategory2"
+        android:layout_width="251dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="100dp"
+        android:background="#EAEAEA"
+        app:layout_constraintBottom_toTopOf="@+id/task_description_edit"
+        app:layout_constraintStart_toEndOf="@+id/task_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/task_title_edit"
+        app:layout_constraintVertical_bias="0.213" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_edit"
         android:layout_width="match_parent"
@@ -51,7 +62,7 @@
         android:id="@+id/imageViewHour"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCalendar"
@@ -88,8 +99,8 @@
         android:id="@+id/imageViewCalendar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_title_edit"
         app:srcCompat="@drawable/ic_baseline_today_24" />

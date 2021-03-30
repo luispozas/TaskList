@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="0dp"
-    tools:context=".ui.ViewTaskActivity"
-    android:orientation="vertical">
+    android:backgroundTint="#D3D3D3"
+    android:orientation="vertical"
+    tools:context=".ui.ViewTaskActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_edit"
@@ -93,5 +94,16 @@
         android:inputType="date"
         app:layout_constraintStart_toEndOf="@+id/imageViewCalendar"
         app:layout_constraintTop_toBottomOf="@+id/task_title_edit" />
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="200dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:background="#EAEAEA"
+        app:layout_constraintBottom_toTopOf="@+id/task_description_edit"
+        app:layout_constraintStart_toEndOf="@+id/task_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/task_title_edit"
+        app:layout_constraintVertical_bias="0.25" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

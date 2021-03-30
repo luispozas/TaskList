@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import es.ucm.fdi.tasklist.R;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
@@ -123,7 +124,7 @@ public class TodayFragment extends Fragment implements ObserverDao {
         Log.e("prueba", "Init Database");
 
         if (db != null) {
-            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date ASC", null);
+            Cursor c = db.rawQuery("SELECT * FROM tasks ORDER BY fin, date, hora ASC", null);
             if (c.moveToFirst()) {
                 do {
                     updateList(false,
@@ -133,14 +134,16 @@ public class TodayFragment extends Fragment implements ObserverDao {
                             (c.isNull(3))? "" : c.getString(3),
                             c.getInt(4) == 0 ? false : true,
                             c.getInt(5) == 0 ? false : true,
-                            (c.isNull(6))? "" : c.getString(6));
+                            (c.isNull(6))? "" : c.getString(6),
+                            c.getInt(7),
+                            (c.isNull(8))? "" : c.getString(8));
                 } while (c.moveToNext());
             }
         }
     }
 
-    public TaskDetail updateList(boolean remove, long _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora){
-        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora);
+    public TaskDetail updateList(boolean remove, long _id,  String _title, String _desc, String _date, boolean _fin, boolean _imp, String _hora, int _color, String _type){
+        TaskDetail detail = new TaskDetail(_id, _title, _desc, _date, _fin, _imp, _hora, _color, _type);
         if(remove) todayTaskList.remove(detail);
         else{
             if (!todayTaskList.contains(detail)) {
@@ -164,12 +167,28 @@ public class TodayFragment extends Fragment implements ObserverDao {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openViewViewNotesActivity(todayTaskList.get(position).getId(), todayTaskList.get(position).getTitle(), todayTaskList.get(position).getDesc(),
-                        todayTaskList.get(position).getDate(), todayTaskList.get(position).getFin(), todayTaskList.get(position).getImp(), todayTaskList.get(position).getHora());
+                        todayTaskList.get(position).getDate(), todayTaskList.get(position).getFin(), todayTaskList.get(position).getImp(),
+                        todayTaskList.get(position).getHora(), todayTaskList.get(position).getColor(), todayTaskList.get(position).getType());
+            }
+        });
+
+        FloatingActionButton fab = getActivity().findViewById(R.id.addNote);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openViewViewNotesActivity();
             }
         });
     }
 
-    public void openViewViewNotesActivity(long id, String title, String content, String date, boolean fin, boolean imp, String hora) {
+    private void openViewViewNotesActivity() {
+        Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
+        notesActivityIntent.putExtra("CREATED",false);
+        this.startActivityForResult(notesActivityIntent, 1);
+    }
+
+    public void openViewViewNotesActivity(long id, String title, String content, String date, boolean fin, boolean imp, String hora, int color, String type) {
         Intent notesActivityIntent = new Intent(getActivity(), ViewTaskActivity.class);
         notesActivityIntent.putExtra("CREATED",true);
         notesActivityIntent.putExtra("ID",id);
@@ -179,33 +198,52 @@ public class TodayFragment extends Fragment implements ObserverDao {
         notesActivityIntent.putExtra("FINISH",fin);
         notesActivityIntent.putExtra("IMPORTANT",imp);
         notesActivityIntent.putExtra("HORA",hora);
+        notesActivityIntent.putExtra("COLOR",color);
+        notesActivityIntent.putExtra("TYPE",type);
         this.startActivityForResult(notesActivityIntent, 2);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        String title, content, date, hora;
+        String title, content, date, hora, type;
         boolean finish;
         boolean important;
         long id;
+        int color;
 
         if(data != null) {
+            if (requestCode == 1 && resultCode == Activity.RESULT_CANCELED) return;
+
             title = data.getExtras().getString("title");
             content = data.getExtras().getString("content");
             date = data.getExtras().getString("date");
             hora = data.getExtras().getString("hora");
             finish = data.getExtras().getBoolean("finish");
             important = data.getExtras().getBoolean("important");
+            color = data.getExtras().getInt("color");
+            type = data.getExtras().getString("type");
 
-            if (requestCode == 2) {
+            if (requestCode == 1) {
+                if (resultCode == Activity.RESULT_OK) {
+                    long newId = DataBaseTask.getInstance(getContext()).addTaskItem(new TaskDetail(-1, title, content, date, finish, important, hora, color, type), db);
+                    updateList(false, newId, title, content, date, finish, important, hora, color, type);
+                    Collections.sort(todayTaskList);
+                    arrayAdapter.notifyDataSetChanged();
+                }
+            }
+            else if (requestCode == 2) {
                 id = data.getExtras().getLong("id");
                 if (resultCode == Activity.RESULT_OK) {
-                    TaskDetail td = updateList(false, id, title, content, date, finish, important, hora);
-                    DataBaseTask.getInstance(getContext()).updateItem(td, db);
+                    TaskDetail td = updateList(false, id, title, content, date, finish, important, hora, color, type);
+                    Collections.sort(todayTaskList);
+                    arrayAdapter.notifyDataSetChanged();
+                    DataBaseTask.getInstance(getContext()).updateTaskItem(td, db);
                 }
                 else if (resultCode == Activity.RESULT_CANCELED) {
-                    DataBaseTask.getInstance(getContext()).deleteItem(new TaskDetail(id, title, content, date, finish, important, hora), db);
-                    updateList(true, id, title, content, date, finish, important, hora);
+                    DataBaseTask.getInstance(getContext()).deleteTaskItem(new TaskDetail(id, title, content, date, finish, important, hora, color, type), db);
+                    updateList(true, id, title, content, date, finish, important, hora, color, type);
+                    Collections.sort(todayTaskList);
+                    arrayAdapter.notifyDataSetChanged();
                 }
             }
         }

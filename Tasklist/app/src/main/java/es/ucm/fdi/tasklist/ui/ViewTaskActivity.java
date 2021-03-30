@@ -8,6 +8,9 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,20 +20,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
 
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
+
 import es.ucm.fdi.tasklist.R;
+import es.ucm.fdi.tasklist.db.Categories;
 import es.ucm.fdi.tasklist.db.DataBaseTask;
 
 public class ViewTaskActivity extends AppCompatActivity {
@@ -41,8 +55,11 @@ public class ViewTaskActivity extends AppCompatActivity {
     private EditText hora;
     private  boolean finish;
     private boolean important;
+    private int color;
     private  ImageView calendar;
     private ImageView clock;
+    private Spinner spinnerCategory;
+    private ArrayList<Categories> categories;
     private boolean created;
 
 
@@ -63,6 +80,12 @@ public class ViewTaskActivity extends AppCompatActivity {
         hora = findViewById(R.id.task_hour_edit);
         calendar = findViewById(R.id.imageViewCalendar);
         clock = findViewById(R.id.imageViewHour);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+
+        updateCategories();
+
+        ArrayAdapter<Categories> adapter = new ArrayAdapter<>(getApplication(), android.R.layout.simple_spinner_item, categories);
+        spinnerCategory.setAdapter(adapter);
 
         created = getIntent().getExtras().getBoolean("CREATED");
         if(created){
@@ -74,11 +97,15 @@ public class ViewTaskActivity extends AppCompatActivity {
             String h = getIntent().getExtras().getString("HORA");
             finish = getIntent().getExtras().getBoolean("FINISH");
             important = getIntent().getExtras().getBoolean("IMPORTANT");
+            color = getIntent().getExtras().getInt("COLOR");
+            String type = getIntent().getExtras().getString("TYPE");
 
             title.setText(t);
             description.setText(c);
             date.setText(d);
             hora.setText(h);
+
+            //spinnerCategory.setSelection(2);
 
         }
         else{
@@ -87,8 +114,29 @@ public class ViewTaskActivity extends AppCompatActivity {
             title.requestFocus();
             date.setText(DataBaseTask.getInstance(this).getDate());
             hora.setText(DataBaseTask.getInstance(this).getHourAndMin());
+            if(getIntent().getExtras().getBoolean("CREATED_IMPORTANT")){
+                important = true;
+            }
+            spinnerCategory.setSelection(0);
         }
         execListener();
+    }
+
+    public void updateCategories(){
+        categories = new ArrayList<Categories>();
+        DataBaseTask dbHelper = DataBaseTask.getInstance(getApplication());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Log.e("prueba", "Init categroy Database");
+
+        if (db != null) {
+            Cursor c = db.rawQuery("SELECT * FROM category ORDER BY name  ASC", null);
+            if (c.moveToFirst()) {
+                do {
+                    categories.add(new Categories((c.isNull(0))? "" : c.getString(0), c.getInt(1)));
+                } while (c.moveToNext());
+            }
+        }
     }
 
     @Override
@@ -97,6 +145,7 @@ public class ViewTaskActivity extends AppCompatActivity {
         String c = description.getText().toString();
         String d = date.getText().toString();
         String h = hora.getText().toString();
+        Categories category = (Categories) spinnerCategory.getSelectedItem();
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title",t);
@@ -105,6 +154,8 @@ public class ViewTaskActivity extends AppCompatActivity {
         returnIntent.putExtra("date",d);
         returnIntent.putExtra("important",important);
         returnIntent.putExtra("hora",h);
+        returnIntent.putExtra("color", category.getColor());
+        returnIntent.putExtra("type", category.getType());
 
         if(created){
             long id = getIntent().getExtras().getLong("ID");
@@ -126,7 +177,7 @@ public class ViewTaskActivity extends AppCompatActivity {
             case R.id.btn_delete:
                 Intent returnIntent = new Intent();
                 if(created){
-                    int id = getIntent().getExtras().getInt("ID");
+                    long id = getIntent().getExtras().getLong("ID");
                     returnIntent.putExtra("id", id);
                 }
                 setResult(Activity.RESULT_CANCELED,returnIntent);
@@ -202,5 +253,4 @@ public class ViewTaskActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
     }
-
 }
