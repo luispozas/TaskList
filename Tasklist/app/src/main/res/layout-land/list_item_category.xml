@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:id="@+id/info_task"
-        android:layout_width="671dp"
+        android:layout_width="624dp"
         android:layout_height="60dp"
         android:background="?android:attr/activatedBackgroundIndicator"
         android:clickable="false"

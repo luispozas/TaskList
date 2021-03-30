@@ -101,9 +101,11 @@
         android:layout_height="39dp"
         android:layout_marginStart="16dp"
         android:background="#EAEAEA"
+        android:scrollbarSize="8dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@+id/task_description_edit"
         app:layout_constraintStart_toEndOf="@+id/task_date_edit"
         app:layout_constraintTop_toBottomOf="@+id/task_title_edit"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.238" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

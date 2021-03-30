@@ -1,6 +1,9 @@
 package es.ucm.fdi.tasklist.db;
 
-public class Categories{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Categories implements Parcelable {
     private int color;
     private String type;
 
@@ -8,6 +11,23 @@ public class Categories{
         this.color = color;
         this.type = type;
     }
+
+    protected Categories(Parcel in) {
+        color = in.readInt();
+        type = in.readString();
+    }
+
+    public static final Creator<Categories> CREATOR = new Creator<Categories>() {
+        @Override
+        public Categories createFromParcel(Parcel in) {
+            return new Categories(in);
+        }
+
+        @Override
+        public Categories[] newArray(int size) {
+            return new Categories[size];
+        }
+    };
 
     public int getColor() {
         return color;
@@ -36,6 +56,17 @@ public class Categories{
     @Override
     public String toString() {
         return type;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(type);
+        dest.writeInt(color);
     }
 }
 

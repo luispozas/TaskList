@@ -104,8 +104,9 @@ public class ViewTaskActivity extends AppCompatActivity {
             description.setText(c);
             date.setText(d);
             hora.setText(h);
-
-            //spinnerCategory.setSelection(2);
+            
+            /*TODO: Cambiar para que aparezca el tipo propio de la nota por defeto*/
+            spinnerCategory.setSelection(0);
 
         }
         else{
@@ -235,7 +236,7 @@ public class ViewTaskActivity extends AppCompatActivity {
         DatePickerDialog dialogoFecha = new DatePickerDialog(ViewTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                date.setText(DataBaseTask.getInstance(getApplicationContext()).getFormatDate(dayOfMonth, month, year));
+                date.setText(DataBaseTask.getInstance(getApplicationContext()).getFormatDate(dayOfMonth, month+1, year));
             }
         }, DataBaseTask.getInstance(getApplicationContext()).getAnio(),
                 DataBaseTask.getInstance(getApplicationContext()).getMes(),

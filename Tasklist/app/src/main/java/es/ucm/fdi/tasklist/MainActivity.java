@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Inicializo la base de datos de categorias con la de defecto.
         DataBaseTask db = DataBaseTask.getInstance(getApplicationContext());
-        db.addCategoryItem(getString(R.string.categoryDefault), Color.rgb(96, 200, 75), db.getWritableDatabase());
+        db.addCategoryItem(getString(R.string.categoryDefault), Color.GRAY, db.getWritableDatabase());
     }
 
     @Override

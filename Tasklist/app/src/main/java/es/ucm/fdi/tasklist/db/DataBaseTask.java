@@ -128,7 +128,7 @@ public class DataBaseTask extends SQLiteOpenHelper {
     }
 
     public int getMes() {
-        return Calendar.getInstance().get(Calendar.MONTH);
+        return Calendar.getInstance().get(Calendar.MONTH)+1;
     }
 
     public int getDia() {

@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         category_name = view.findViewById(R.id.category_name);
         category_color = view.findViewById(R.id.category_color);
-        color = Color.valueOf(Color.rgb(96, 200, 75));
+        color = Color.valueOf(Color.GRAY);
 
         updateCategories();
 
@@ -119,6 +119,20 @@ public class SettingFragment extends Fragment {
                 } while (c.moveToNext());
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("categoryList", categoryList);
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null)
+            categoryList = savedInstanceState.getParcelableArrayList("categoryList");
     }
 
 
