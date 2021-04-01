@@ -89,7 +89,7 @@ public class CalendarFragment extends Fragment implements ObserverDao {
 
         DatePickerTimeline datePickerTimeline = view.findViewById(R.id.datePickerTimeline);
         datePickerTimeline.setInitialDate(DataBaseTask.getInstance(getContext()).getAnio(),
-                DataBaseTask.getInstance(getContext()).getMes(),
+                DataBaseTask.getInstance(getContext()).getMes()-1,
                 DataBaseTask.getInstance(getContext()).getDia());
 
         datePickerTimeline.setActiveDate(Calendar.getInstance());
@@ -97,13 +97,13 @@ public class CalendarFragment extends Fragment implements ObserverDao {
         datePickerTimeline.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(int year, int month, int day, int dayOfWeek) {
-                dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(day, month, year);
+                dateSelect = DataBaseTask.getInstance(getContext()).getFormatDate(day, month+1, year);
                 filterList();
             }
 
             @Override
             public void onDisabledDateSelected(int year, int month, int day, int dayOfWeek, boolean isDisabled) {
-                // Do Something
+                //Do Something
             }
         });
 

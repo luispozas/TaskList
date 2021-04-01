@@ -104,10 +104,10 @@ public class ViewTaskActivity extends AppCompatActivity {
             description.setText(c);
             date.setText(d);
             hora.setText(h);
-            
-            /*TODO: Cambiar para que aparezca el tipo propio de la nota por defeto*/
-            spinnerCategory.setSelection(0);
 
+            int pos = adapter.getPosition(new Categories(type, color));
+            if(pos < 0 ) pos = 0;
+            spinnerCategory.setSelection(pos);
         }
         else{
             toolbar.setTitle(getString(R.string.nuevaTarea));

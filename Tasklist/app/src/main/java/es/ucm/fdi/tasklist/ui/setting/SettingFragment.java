@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +44,7 @@ public class SettingFragment extends Fragment {
 
     View view;
     EditText category_name;
-    Button category_color;
+    Button category_color, save;
     ColorPicker colorPicker;
     private ArrayList<Categories> categoryList = new ArrayList();
     private TaskListCategoryAdapter arrayAdapter;
@@ -78,6 +79,7 @@ public class SettingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         category_name = view.findViewById(R.id.category_name);
         category_color = view.findViewById(R.id.category_color);
+        save = view.findViewById(R.id.add_category);
         color = Color.valueOf(Color.GRAY);
 
         updateCategories();
@@ -99,6 +101,27 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 putDialog();
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String name = category_name.getText().toString();
+                if(!name.equals("")){
+                    db =  DataBaseTask.getInstance(getContext()).getWritableDatabase();
+                    DataBaseTask.getInstance(getContext()).addCategoryItem(name, Color.rgb(color.red(), color.green(), color.blue()), db);
+                    Categories c = new Categories(name, Color.rgb(color.red(), color.green(), color.blue()));
+                    if(!categoryList.contains(c)){
+                        categoryList.add(c);
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                    else{
+                        Toast.makeText(getActivity().getApplicationContext(), "La categoría introducida ya existe", Toast.LENGTH_SHORT);
+                    }
+
+                }
             }
         });
     }
@@ -135,16 +158,9 @@ public class SettingFragment extends Fragment {
             categoryList = savedInstanceState.getParcelableArrayList("categoryList");
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onPause() {
         super.onPause();
-        String name = category_name.getText().toString();
-        if(!name.equals("")){
-            db =  DataBaseTask.getInstance(getContext()).getWritableDatabase();
-            DataBaseTask.getInstance(getContext()).addCategoryItem(name, Color.rgb(color.red(), color.green(), color.blue()), db);
-        }
     }
 
     private void putDialog(){
