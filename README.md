@@ -1,2 +1,2 @@
 # TaskList
-Repositorio para el proyecto de PAD
+Aplicación para gestionar tareas con recordatorios y estadísticas sobre la productividad.
